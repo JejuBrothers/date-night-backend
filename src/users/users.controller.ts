@@ -5,12 +5,14 @@ import {
   Get,
   Logger,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
 import { UsersService } from './users.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -25,17 +27,20 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<UserModel> {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<UserModel> {
     return this.usersService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string): Promise<UserModel> {
-    return this.usersService.update(id);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserModel> {
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<number> {
+  delete(@Param('id', ParseUUIDPipe) id: string): Promise<number> {
     return this.usersService.delete(id);
   }
 

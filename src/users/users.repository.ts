@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -26,8 +27,10 @@ export class UsersRepository {
     return UserModel.query().deleteById(id);
   }
 
-  // pass in update object?
-  update(id: string): Promise<UserModel> {
-    return UserModel.query().updateAndFetchById(id, {});
+  update(id: string, updateUserDto: UpdateUserDto): Promise<UserModel> {
+    return UserModel.query().updateAndFetchById(id, {
+      ...updateUserDto,
+      updatedAt: new Date(),
+    });
   }
 }
