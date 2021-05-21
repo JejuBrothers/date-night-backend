@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
 import { UsersRepository } from './users.repository';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -16,5 +17,21 @@ export class UsersService {
     )}`;
     this.logger.log(message);
     return this.usersRepository.create(createUserDto);
+  }
+
+  findAll(): Promise<UserModel[]> {
+    return this.usersRepository.findAll();
+  }
+
+  findOne(id: string): Promise<UserModel> {
+    return this.usersRepository.findOne(id);
+  }
+
+  update(id: string, updateUserDto: UpdateUserDto): Promise<UserModel> {
+    return this.usersRepository.update(id, updateUserDto);
+  }
+
+  delete(id: string): Promise<number> {
+    return this.usersRepository.delete(id);
   }
 }
