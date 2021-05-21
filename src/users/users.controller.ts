@@ -21,13 +21,26 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
+  @Post()
+  create(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
+    const message = `UsersController.create() createUserDto=${JSON.stringify(
+      createUserDto,
+    )}`;
+    this.logger.log(message);
+    return this.usersService.create(createUserDto);
+  }
+
   @Get()
   findAll(): Promise<UserModel[]> {
+    const message = 'UsersController.findAll()';
+    this.logger.log(message);
     return this.usersService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<UserModel> {
+    const message = `UsersController.findOne() id=${id}`;
+    this.logger.log(message);
     return this.usersService.findOne(id);
   }
 
@@ -36,20 +49,17 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserModel> {
+    const message = `UsersController.update() id=${id} updateUserDto=${JSON.stringify(
+      updateUserDto,
+    )}`;
+    this.logger.log(message);
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   delete(@Param('id', ParseUUIDPipe) id: string): Promise<number> {
-    return this.usersService.delete(id);
-  }
-
-  @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
-    const message = `UsersController.create() createUserDto=${JSON.stringify(
-      createUserDto,
-    )}`;
+    const message = `UsersController.delete() id=${id}`;
     this.logger.log(message);
-    return this.usersService.create(createUserDto);
+    return this.usersService.delete(id);
   }
 }
