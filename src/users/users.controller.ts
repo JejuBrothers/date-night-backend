@@ -34,7 +34,7 @@ export class UsersController {
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    updateUserDto: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserModel> {
     return this.usersService.update(id, updateUserDto);
   }
