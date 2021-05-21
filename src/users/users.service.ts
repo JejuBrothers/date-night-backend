@@ -17,4 +17,20 @@ export class UsersService {
     this.logger.log(message);
     return this.usersRepository.create(createUserDto);
   }
+
+  findAll(): Promise<UserModel[]> {
+    return this.usersRepository.findAll();
+  }
+
+  findOne(id: string): Promise<UserModel> {
+    return this.usersRepository.findOne(id);
+  }
+
+  update(id: string): Promise<UserModel> {
+    return this.usersRepository.update(id);
+  }
+
+  delete(id: string): Promise<number> {
+    return this.usersRepository.delete(id);
+  }
 }
