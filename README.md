@@ -71,3 +71,34 @@ $ docker ps
 $ docker start pg-docker
 $ docker stop pg-docker
 ```
+
+## Fork & Pull Request Workflow
+
+We follow the Fork & Pull Request Workflow to create PR to avoid updating this repository accidentally
+
+```bash
+# Fork into your github account by clicking the Fork button (at the top-right corner).
+
+# Clone your forked repository, [your_github_account]/date-night-backend
+
+# Set JejuBrothers/date-night-backend as upstream
+$ git remote add upstream https://github.com/JejuBrothers/date-night-backend.git
+
+ # list remote repositories with fetch and push urls
+$ git remote -v
+
+# Set the push url as irrelevant (in this case, no-push)
+# So, we can avoid updating upstream accidentally
+$ git remote set-url --push upstream no-push
+
+# Always pull from upstream before creating branch
+
+$ git pull upstream main
+$ git checkout -b [branch_name]
+
+# Push your branch into your forked repository, and then, create PR
+
+$ git push origin [branch_name]
+```
+
+For more info, please check [this document](https://www.atlassian.com/git/tutorials/comparing-workflows/forking-workflow).
