@@ -1,7 +1,15 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Logger,
+  Post,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserModel } from '../users/models/user.model';
+import { LocalAuthGuard } from './local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -17,5 +25,12 @@ export class AuthController {
     )}`;
     this.logger.log(message);
     return this.authService.signup(createUserDto);
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  login(@Request() req) {
+    // passport generates user object based on return value of validate in local strat
+    return this.authService.login(req.user);
   }
 }
