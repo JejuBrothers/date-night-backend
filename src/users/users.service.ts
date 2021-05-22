@@ -20,18 +20,28 @@ export class UsersService {
   }
 
   findAll(): Promise<UserModel[]> {
+    const message = 'UsersService.findAll()';
+    this.logger.log(message);
     return this.usersRepository.findAll();
   }
 
   findOne(id: string): Promise<UserModel> {
+    const message = `UsersService.findOne() id=${id}`;
+    this.logger.log(message);
     return this.usersRepository.findOne(id);
   }
 
   update(id: string, updateUserDto: UpdateUserDto): Promise<UserModel> {
+    const message = `UsersService.update() id=${id} updateUserDto=${JSON.stringify(
+      updateUserDto,
+    )}`;
+    this.logger.log(message);
     return this.usersRepository.update(id, updateUserDto);
   }
 
   delete(id: string): Promise<number> {
+    const message = `UsersService.delete() id=${id}`;
+    this.logger.log(message);
     return this.usersRepository.delete(id);
   }
 }

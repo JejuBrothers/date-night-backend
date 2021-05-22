@@ -16,21 +16,31 @@ export class UsersRepository {
   }
 
   findAll(): Promise<UserModel[]> {
+    const message = 'UsersRepository.findAll()';
+    this.logger.log(message);
     return UserModel.query();
   }
 
   findOne(id: string): Promise<UserModel> {
+    const message = `UsersRepository.findOne() id=${id}`;
+    this.logger.log(message);
     return UserModel.query().findById(id);
   }
 
-  delete(id: string): Promise<number> {
-    return UserModel.query().deleteById(id);
-  }
-
   update(id: string, updateUserDto: UpdateUserDto): Promise<UserModel> {
+    const message = `UsersRepository.update() id=${id} updateUserDto=${JSON.stringify(
+      updateUserDto,
+    )}`;
+    this.logger.log(message);
     return UserModel.query().updateAndFetchById(id, {
       ...updateUserDto,
       updatedAt: new Date(),
     });
+  }
+
+  delete(id: string): Promise<number> {
+    const message = `UsersRepository.delete() id=${id}`;
+    this.logger.log(message);
+    return UserModel.query().deleteById(id);
   }
 }
