@@ -22,6 +22,8 @@ export class AuthService {
 
   //invoked by local strat
   async validateUser(username: string, password: string): Promise<any> {
+    const message = `AuthService.validateUser() username=${username} pw=${password}`;
+    this.logger.log(message);
     const user = await this.usersService.findByUsername(username);
     if (user && user.password === password) {
       const { password, ...result } = user;
@@ -30,8 +32,10 @@ export class AuthService {
     return null;
   }
 
-  // why can user be any?
+  // user is object. any better types?
   async login(user: any) {
+    const message = `AuthService.login() userObject=${JSON.stringify(user)}`;
+    this.logger.log(message);
     const payload = { username: user.username, sub: user.userId };
     return {
       access_token: this.jwtService.sign(payload),

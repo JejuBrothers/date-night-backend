@@ -30,6 +30,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
+    const message = `AuthController.login() userObject=${JSON.stringify(
+      req.user,
+    )}`;
+    this.logger.log(message);
     // passport generates user object based on return value of validate in local strat
     return this.authService.login(req.user);
   }
