@@ -24,7 +24,7 @@ export class UserModel extends Model {
 
       properties: {
         id: { type: 'uuid' },
-        username: { type: 'string', minLength: 1, maxLength: 255 },
+        username: { type: 'string', minLength: 4, maxLength: 16 },
         email: { type: 'string' },
         password: { type: 'string', minLength: 4, maxLength: 16 },
         role: {
