@@ -29,7 +29,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req) {
+  login(@Request() req): Promise<any> {
     const message = `AuthController.login() userObject=${JSON.stringify(
       req.user,
     )}`;

@@ -32,11 +32,10 @@ export class AuthService {
     return null;
   }
 
-  // user is object. any better types?
-  async login(user: any) {
+  async login(user: UserModel): Promise<any> {
     const message = `AuthService.login() userObject=${JSON.stringify(user)}`;
     this.logger.log(message);
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

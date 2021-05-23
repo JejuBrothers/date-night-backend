@@ -28,7 +28,7 @@ export class UsersRepository {
   }
 
   findByUsername(username: string): Promise<UserModel> {
-    const message = `UsersRepository.findByUsername() id=${username}`;
+    const message = `UsersRepository.findByUsername() username=${username}`;
     this.logger.log(message);
     return UserModel.query().findOne({ username });
   }
