@@ -31,6 +31,12 @@ export class UsersService {
     return this.usersRepository.findOne(id);
   }
 
+  findByUsername(username: string): Promise<UserModel> {
+    const message = `UsersService.findByUsername() username=${username}`;
+    this.logger.log(message);
+    return this.usersRepository.findByUsername(username);
+  }
+
   update(id: string, updateUserDto: UpdateUserDto): Promise<UserModel> {
     const message = `UsersService.update() id=${id} updateUserDto=${JSON.stringify(
       updateUserDto,

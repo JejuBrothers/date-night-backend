@@ -27,6 +27,12 @@ export class UsersRepository {
     return UserModel.query().findById(id);
   }
 
+  findByUsername(username: string): Promise<UserModel> {
+    const message = `UsersRepository.findByUsername() username=${username}`;
+    this.logger.log(message);
+    return UserModel.query().findOne({ username });
+  }
+
   update(id: string, updateUserDto: UpdateUserDto): Promise<UserModel> {
     const message = `UsersRepository.update() id=${id} updateUserDto=${JSON.stringify(
       updateUserDto,
