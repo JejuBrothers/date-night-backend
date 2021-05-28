@@ -13,6 +13,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { UserRoleEnum } from './enum/user-role.enum';
 
 @Controller('users')
 export class UsersController {

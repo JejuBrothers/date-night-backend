@@ -6,7 +6,7 @@ export class UserModel extends Model {
   username: string;
   email: string;
   password: string;
-  role: UserRoleEnum;
+  roles: UserRoleEnum[];
   createdAt: Date;
   updatedAt: Date;
 
