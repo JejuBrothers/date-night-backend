@@ -20,6 +20,6 @@ export class CreateUserDto {
   @IsString()
   @IsDefined()
   @MinLength(4, { message: 'Password is too short' })
-  @MaxLength(16, { message: 'Password is too long' })
+  @MaxLength(72, { message: 'Password is too long' })
   password: string;
 }
