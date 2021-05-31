@@ -28,10 +28,11 @@ export class UsersService {
     this.logger.log(message);
     const hashed = await this.hashPassword(createUserDto.password);
     createUserDto.password = hashed;
-    return this.usersRepository.create(createUserDto);
+    const createdUser = await this.usersRepository.create(createUserDto);
+    return createdUser;
   }
 
-  findAll(): Promise<UserModel[]> {
+  async findAll(): Promise<UserModel[]> {
     const message = 'UsersService.findAll()';
     this.logger.log(message);
     return this.usersRepository.findAll();

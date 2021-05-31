@@ -6,7 +6,7 @@ export class UserModel extends Model {
   username: string;
   email: string;
   password: string;
-  roles: UserRoleEnum[];
+  role: UserRoleEnum;
   createdAt: Date;
   updatedAt: Date;
 
@@ -36,5 +36,13 @@ export class UserModel extends Model {
         updatedAt: { type: 'timestamp' },
       },
     };
+  }
+
+  $formatJson(jsonRaw) {
+    const json = super.$formatJson(jsonRaw);
+    delete json.password;
+    delete json.role;
+
+    return json;
   }
 }
