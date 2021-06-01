@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserModel } from '../users/models/user.model';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { Public } from './auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +19,7 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
+  @Public()
   @Post('signup')
   signup(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
     const message = `AuthController.signup() createUserDto=${JSON.stringify(
@@ -27,8 +29,9 @@ export class AuthController {
     return this.authService.signup(createUserDto);
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
+  @Public()
+  @UseGuards(LocalAuthGuard)
   login(@Request() req): Promise<any> {
     const message = `AuthController.login() userObject=${JSON.stringify(
       req.user,

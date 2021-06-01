@@ -21,16 +21,24 @@ export class AuthService {
     return this.usersService.create(createUserDto);
   }
 
+  async hashPassword(plainPass: string): Promise<string> {
+    const saltOrRounds = 10;
+    const hash = await bcrypt.hash(plainPass, saltOrRounds);
+    const message = `UsersService.hashPassword() hash=${hash} 
+    )}`;
+    this.logger.log(message);
+    return hash;
+  }
+
   //invoked by local strat
   async validateUser(username: string, password: string): Promise<any> {
     const message = `AuthService.validateUser() username=${username} pw=${password}`;
     this.logger.log(message);
     const user = await this.usersService.findByUsername(username);
-    console.log(user);
     if (user) {
-      if (await bcrypt.compare(password, user.password)) {
-        return user;
-      }
+      const isMatch = await bcrypt.compare(password, user.password);
+
+      return isMatch;
     }
     return null;
   }

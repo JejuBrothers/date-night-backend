@@ -13,8 +13,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  // for jwt-strat, guaranteed we're receiving a valid token
   async validate(payload: any) {
-    //userId
     return { userId: payload.sub, username: payload.username };
   }
 }
