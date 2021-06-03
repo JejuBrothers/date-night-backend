@@ -15,6 +15,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { UserRoleEnum } from './enum/user-role.enum';
+import { Public } from 'src/auth/auth.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -24,6 +25,7 @@ export class UsersController {
   ) {}
 
   @Post()
+  @Roles([UserRoleEnum.ADMIN])
   create(@Body() createUserDto: CreateUserDto): Promise<UserModel> {
     const message = `UsersController.create() createUserDto=${JSON.stringify(
       createUserDto,
@@ -33,6 +35,7 @@ export class UsersController {
   }
 
   @Get()
+  @Roles([UserRoleEnum.ADMIN])
   findAll(): Promise<UserModel[]> {
     const message = 'UsersController.findAll()';
     this.logger.log(message);
@@ -40,6 +43,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
   findOne(@Param('id', ParseUUIDPipe) id: string): Promise<UserModel> {
     const message = `UsersController.findOne() id=${id}`;
     this.logger.log(message);
@@ -47,6 +51,7 @@ export class UsersController {
   }
 
   @Put(':id')
+  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -59,6 +64,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
   delete(@Param('id', ParseUUIDPipe) id: string): Promise<number> {
     const message = `UsersController.delete() id=${id}`;
     this.logger.log(message);
