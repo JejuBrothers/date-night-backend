@@ -27,8 +27,7 @@ export class AuthService {
     const user = await this.usersService.findByUsername(username);
     if (user) {
       const isMatch = await bcrypt.compare(password, user.password);
-
-      return isMatch;
+      if (isMatch) return user;
     }
     return null;
   }
@@ -40,5 +39,11 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async findOne(userId: string): Promise<UserModel> {
+    const message = `AuthService.findOne() userId=${userId}`;
+    this.logger.log(message);
+    return this.usersService.findOne(userId);
   }
 }

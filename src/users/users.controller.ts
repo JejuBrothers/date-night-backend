@@ -35,6 +35,7 @@ export class UsersController {
   }
 
   @Get()
+  // @Public()
   @Roles([UserRoleEnum.ADMIN])
   findAll(): Promise<UserModel[]> {
     const message = 'UsersController.findAll()';
