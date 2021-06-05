@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UserModel } from '../users/models/user.model';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -20,14 +21,13 @@ export class AuthService {
     return this.usersService.create(createUserDto);
   }
 
-  //invoked by local strat
   async validateUser(username: string, password: string): Promise<any> {
     const message = `AuthService.validateUser() username=${username} pw=${password}`;
     this.logger.log(message);
     const user = await this.usersService.findByUsername(username);
-    if (user && user.password === password) {
-      const { password, ...result } = user;
-      return result;
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) return user;
     }
     return null;
   }
@@ -39,5 +39,11 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async findOne(userId: string): Promise<UserModel> {
+    const message = `AuthService.findOne() userId=${userId}`;
+    this.logger.log(message);
+    return this.usersService.findOne(userId);
   }
 }

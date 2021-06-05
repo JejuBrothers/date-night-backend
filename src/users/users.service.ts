@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
 import { UsersRepository } from './users.repository';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -11,15 +12,27 @@ export class UsersService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<UserModel> {
+  async hashPassword(plainPass: string): Promise<string> {
+    const saltOrRounds = 10;
+    const hash = await bcrypt.hash(plainPass, saltOrRounds);
+    const message = `UsersService.hashPassword() hash=${hash} 
+    )}`;
+    this.logger.log(message);
+    return hash;
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<UserModel> {
     const message = `UsersService.create() createUserDto=${JSON.stringify(
       createUserDto,
     )}`;
     this.logger.log(message);
-    return this.usersRepository.create(createUserDto);
+    const hashed = await this.hashPassword(createUserDto.password);
+    createUserDto.password = hashed;
+    const createdUser = await this.usersRepository.create(createUserDto);
+    return createdUser;
   }
 
-  findAll(): Promise<UserModel[]> {
+  async findAll(): Promise<UserModel[]> {
     const message = 'UsersService.findAll()';
     this.logger.log(message);
     return this.usersRepository.findAll();
