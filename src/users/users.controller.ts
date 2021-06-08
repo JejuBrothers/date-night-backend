@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
@@ -34,13 +35,20 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
-  // @Public()
+  @Get('all')
   @Roles([UserRoleEnum.ADMIN])
   findAll(): Promise<UserModel[]> {
     const message = 'UsersController.findAll()';
     this.logger.log(message);
     return this.usersService.findAll();
+  }
+
+  @Get()
+  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
+  findByUsername(@Query('username') username: string): Promise<UserModel> {
+    const message = `UsersController.findByUsername() username=${username}`;
+    this.logger.log(message);
+    return this.usersService.findByUsername(username);
   }
 
   @Get(':id')
