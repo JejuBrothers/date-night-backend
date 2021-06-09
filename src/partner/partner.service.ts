@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { PartnerStatusEnum } from 'src/users/enum/partner-status.enum';
 
 @Injectable()
 export class PartnerService {
@@ -27,5 +28,17 @@ export class PartnerService {
       token.partner_token = this.jwtService.sign(payload);
     }
     return token;
+  }
+
+  async updatePartners(requester: string, requestee: string) {
+    const message = `partnerService.updatePartners() requestor=${requester} requestee=${requestee}`;
+    await this.usersService.updateByUsername(requester, {
+      partner: requestee,
+      status: PartnerStatusEnum.TAKEN,
+    });
+    await this.usersService.updateByUsername(requestee, {
+      partner: requester,
+      status: PartnerStatusEnum.TAKEN,
+    });
   }
 }

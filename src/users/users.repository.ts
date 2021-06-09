@@ -44,6 +44,25 @@ export class UsersRepository {
     });
   }
 
+  updateByUsername(
+    username: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserModel> {
+    const message = `UsersRepository.update() username=${username} updateUserDto=${JSON.stringify(
+      updateUserDto,
+    )}`;
+    this.logger.log(message);
+    return UserModel.query()
+      .patch(updateUserDto)
+      .where('username', username)
+      .returning('*')
+      .first();
+    // return UserModel.query().updateAndFetchById(, {
+    //   ...updateUserDto,
+    //   updatedAt: new Date(),
+    // });
+  }
+
   delete(id: string): Promise<number> {
     const message = `UsersRepository.delete() id=${id}`;
     this.logger.log(message);

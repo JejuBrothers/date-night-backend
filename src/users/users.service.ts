@@ -58,6 +58,17 @@ export class UsersService {
     return this.usersRepository.update(id, updateUserDto);
   }
 
+  updateByUsername(
+    username: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserModel> {
+    const message = `UsersService.update() username=${username} updateUserDto=${JSON.stringify(
+      updateUserDto,
+    )}`;
+    this.logger.log(message);
+    return this.usersRepository.updateByUsername(username, updateUserDto);
+  }
+
   delete(id: string): Promise<number> {
     const message = `UsersService.delete() id=${id}`;
     this.logger.log(message);

@@ -12,6 +12,7 @@ import { PartnerService } from './partner.service';
 import { UserModel } from '../users/models/user.model';
 import { JwtService } from '@nestjs/jwt';
 import { Public } from 'src/auth/auth.decorator';
+import { Get } from '@nestjs/common';
 
 @Controller('partner')
 export class PartnerController {
@@ -31,14 +32,15 @@ export class PartnerController {
     return await this.partnerService.addPartner(req.user.username, target);
   }
 
-  @Post('accept')
+  @Get('accept')
   @Public()
   async acceptRequest(@Query('token') token: string) {
-    this.logger.log(`partnerController.accept() id=${token}`);
+    this.logger.log(`partnerController.accept() token=${token}`);
 
     try {
       const valid = await this.jwtService.verify(token);
       this.logger.log(`valid partner token: ${JSON.stringify(valid)}`);
+      this.partnerService.updatePartners(valid.requester, valid.requestee);
     } catch (error) {
       this.logger.error(`error verifying token: ${error}`);
     }
