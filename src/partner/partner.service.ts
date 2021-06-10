@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { PartnerStatusEnum } from 'src/users/enum/partner-status.enum';
@@ -20,6 +19,12 @@ export class PartnerService {
     const targetUser = await this.usersService.findByUsername(requestee);
     const message = `partnerService.addPartner() requestUser=${requestUser.username} targetUser=${targetUser.username}`;
     this.logger.log(message);
+    //if user already sent out a request to someone else
+    if (requestUser.status !== PartnerStatusEnum.SINGLE) {
+      this.logger.error(
+        `partnerService.addPartner() user already has a pending request`,
+      );
+    }
     if (targetUser) {
       const payload = {
         requester: requestUser.username,
@@ -27,11 +32,27 @@ export class PartnerService {
       };
       token.partner_token = this.jwtService.sign(payload);
     }
+    requestUser.status = PartnerStatusEnum.PENDING;
+
     return token;
   }
 
-  async updatePartners(requester: string, requestee: string) {
-    const message = `partnerService.updatePartners() requestor=${requester} requestee=${requestee}`;
+  async updatePartners(
+    requester: string,
+    requestee: string,
+    decision: boolean,
+  ): Promise<any> {
+    const message = `partnerService.updatePartners() requestor=${requester} requestee=${requestee} decision=${decision}`;
+    this.logger.log(message);
+    if (decision) {
+      return await this.acceptPartners(requester, requestee);
+    }
+    return await this.denyPartners(requester, requestee);
+  }
+
+  async acceptPartners(requester: string, requestee: string): Promise<any> {
+    const message = `partnerService.acceptPartners() requestor=${requester} requestee=${requestee}`;
+    this.logger.log(message);
     await this.usersService.updateByUsername(requester, {
       partner: requestee,
       status: PartnerStatusEnum.TAKEN,
@@ -39,6 +60,15 @@ export class PartnerService {
     await this.usersService.updateByUsername(requestee, {
       partner: requester,
       status: PartnerStatusEnum.TAKEN,
+    });
+  }
+
+  async denyPartners(requester: string, requestee: string): Promise<any> {
+    const message = `partnerService.denyPartners() requestor=${requester} requestee=${requestee}`;
+    this.logger.log(message);
+    await this.usersService.updateByUsername(requester, {
+      partner: requestee,
+      status: PartnerStatusEnum.SINGLE,
     });
   }
 }

@@ -32,15 +32,22 @@ export class PartnerController {
     return await this.partnerService.addPartner(req.user.username, target);
   }
 
-  @Get('accept')
+  @Get('response')
   @Public()
-  async acceptRequest(@Query('token') token: string) {
+  async acceptRequest(
+    @Query('token') token: string,
+    @Query('decision') decision: boolean,
+  ) {
     this.logger.log(`partnerController.accept() token=${token}`);
 
     try {
       const valid = await this.jwtService.verify(token);
       this.logger.log(`valid partner token: ${JSON.stringify(valid)}`);
-      this.partnerService.updatePartners(valid.requester, valid.requestee);
+      this.partnerService.updatePartners(
+        valid.requester,
+        valid.requestee,
+        decision,
+      );
     } catch (error) {
       this.logger.error(`error verifying token: ${error}`);
     }
