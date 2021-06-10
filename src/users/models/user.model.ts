@@ -12,6 +12,7 @@ export class UserModel extends Model {
   updatedAt: Date;
   partner: string;
   status: PartnerStatusEnum;
+  requestedAt: Date;
 
   static get tableName() {
     return 'users';
@@ -43,6 +44,7 @@ export class UserModel extends Model {
           enum: ['single', 'pending', 'taken'],
           default: 'single',
         },
+        requestedAt: { type: 'timestamp' },
       },
     };
   }

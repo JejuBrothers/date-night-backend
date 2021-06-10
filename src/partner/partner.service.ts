@@ -19,20 +19,37 @@ export class PartnerService {
     const targetUser = await this.usersService.findByUsername(requestee);
     const message = `partnerService.addPartner() requestUser=${requestUser.username} targetUser=${targetUser.username}`;
     this.logger.log(message);
-    //if user already sent out a request to someone else
-    if (requestUser.status !== PartnerStatusEnum.SINGLE) {
+
+    if (requestUser.status === PartnerStatusEnum.TAKEN) {
       this.logger.error(
-        `partnerService.addPartner() user already has a pending request`,
+        `partnerService.addPartner() user already has a partner`,
       );
+      return token;
     }
-    if (targetUser) {
-      const payload = {
-        requester: requestUser.username,
-        requestee: targetUser.username,
-      };
-      token.partner_token = this.jwtService.sign(payload);
+    this.logger.log(`times log: ${JSON.stringify(requestUser)}`);
+    // 60000 is 1 minute in milliseconds
+    if (
+      requestUser.status === PartnerStatusEnum.PENDING &&
+      new Date().getTime() <= requestUser.requestedAt.getTime() + 900 * 60000
+    ) {
+      this.logger.error(
+        `partnerService.addPartner() user already has pending request`,
+      );
+      return token;
     }
-    requestUser.status = PartnerStatusEnum.PENDING;
+
+    //if user can generate partner token
+    await this.usersService.updateByUsername(requester, {
+      partner: '',
+      requestedAt: new Date(),
+      status: PartnerStatusEnum.PENDING,
+    });
+
+    const payload = {
+      requester: requestUser.username,
+      requestee: targetUser.username,
+    };
+    token.partner_token = this.jwtService.sign(payload);
 
     return token;
   }
@@ -67,7 +84,6 @@ export class PartnerService {
     const message = `partnerService.denyPartners() requestor=${requester} requestee=${requestee}`;
     this.logger.log(message);
     await this.usersService.updateByUsername(requester, {
-      partner: requestee,
       status: PartnerStatusEnum.SINGLE,
     });
   }

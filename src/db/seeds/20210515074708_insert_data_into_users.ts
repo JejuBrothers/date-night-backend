@@ -13,6 +13,7 @@ export async function seed(knex: Knex): Promise<void> {
       id: '9bdac0a0-a682-43bc-865a-32b983f94f0a',
       partner: '',
       status: 'single',
+      requestedAt: null,
     },
     {
       username: 'user1',
@@ -22,6 +23,7 @@ export async function seed(knex: Knex): Promise<void> {
       id: 'e259b4f7-00c8-4ce2-8dd0-c54e26b97dd5',
       partner: '',
       status: 'single',
+      requestedAt: null,
     },
     {
       username: 'user2',
@@ -31,6 +33,7 @@ export async function seed(knex: Knex): Promise<void> {
       id: 'e7bee3e9-a5d2-4378-860e-3e7a85803e11',
       partner: '',
       status: 'single',
+      requestedAt: null,
     },
     {
       username: 'user3',
@@ -40,6 +43,7 @@ export async function seed(knex: Knex): Promise<void> {
       id: 'fffd3b1e-bef8-404e-a15d-2586f79da920',
       partner: '',
       status: 'single',
+      requestedAt: null,
     },
   ]);
 }

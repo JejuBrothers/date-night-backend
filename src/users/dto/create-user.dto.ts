@@ -25,9 +25,12 @@ export class CreateUserDto {
   @MaxLength(72, { message: 'Password is too long' })
   password: string;
 
+  @IsString()
   partner: string;
 
   @IsString()
   @IsDefined()
   status: PartnerStatusEnum;
+
+  requestedAt: Date;
 }

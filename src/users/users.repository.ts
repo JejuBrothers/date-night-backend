@@ -48,19 +48,15 @@ export class UsersRepository {
     username: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserModel> {
-    const message = `UsersRepository.update() username=${username} updateUserDto=${JSON.stringify(
+    const message = `UsersRepository.updateByUsername() username=${username} updateUserDto=${JSON.stringify(
       updateUserDto,
     )}`;
     this.logger.log(message);
     return UserModel.query()
-      .patch(updateUserDto)
+      .patch({ ...updateUserDto, updatedAt: new Date() })
       .where('username', username)
       .returning('*')
       .first();
-    // return UserModel.query().updateAndFetchById(, {
-    //   ...updateUserDto,
-    //   updatedAt: new Date(),
-    // });
   }
 
   delete(id: string): Promise<number> {

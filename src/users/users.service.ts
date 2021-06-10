@@ -62,7 +62,7 @@ export class UsersService {
     username: string,
     updateUserDto: UpdateUserDto,
   ): Promise<UserModel> {
-    const message = `UsersService.update() username=${username} updateUserDto=${JSON.stringify(
+    const message = `UsersService.updateByUsername() username=${username} updateUserDto=${JSON.stringify(
       updateUserDto,
     )}`;
     this.logger.log(message);

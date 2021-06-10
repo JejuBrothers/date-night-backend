@@ -59,7 +59,7 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Put(':id')
+  @Put('id/:id')
   @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -70,6 +70,19 @@ export class UsersController {
     )}`;
     this.logger.log(message);
     return this.usersService.update(id, updateUserDto);
+  }
+
+  @Put('username/:username')
+  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
+  updateByUsername(
+    @Param('username') username: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserModel> {
+    const message = `UsersController.updateByUsername() username=${username} updateUserDto=${JSON.stringify(
+      updateUserDto,
+    )}`;
+    this.logger.log(message);
+    return this.usersService.updateByUsername(username, updateUserDto);
   }
 
   @Delete(':id')
