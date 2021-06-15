@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
@@ -17,12 +18,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { UserRoleEnum } from './enum/user-role.enum';
 import { Public } from 'src/auth/auth.decorator';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly logger: Logger,
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post()
@@ -91,5 +94,37 @@ export class UsersController {
     const message = `UsersController.delete() id=${id}`;
     this.logger.log(message);
     return this.usersService.delete(id);
+  }
+
+  //partner endpoints
+  @Post('/partner/add')
+  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
+  async sendPartnerRequest(@Request() req, @Query('target') target: string) {
+    const message = `partnerController.sendPartnerRequest() req.user=${JSON.stringify(
+      req.user,
+    )}`;
+    this.logger.log(message);
+    return await this.usersService.addPartner(req.user.username, target);
+  }
+
+  @Get('response')
+  @Public()
+  async acceptRequest(
+    @Query('token') token: string,
+    @Query('decision') decision: boolean,
+  ) {
+    this.logger.log(`partnerController.accept() token=${token}`);
+
+    try {
+      const valid = await this.jwtService.verify(token);
+      this.logger.log(`valid partner token: ${JSON.stringify(valid)}`);
+      this.usersService.updatePartners(
+        valid.requester,
+        valid.requestee,
+        decision,
+      );
+    } catch (error) {
+      this.logger.error(`error verifying token: ${error}`);
+    }
   }
 }

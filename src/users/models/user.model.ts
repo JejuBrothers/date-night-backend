@@ -38,7 +38,7 @@ export class UserModel extends Model {
         },
         createdAt: { type: 'timestamp' },
         updatedAt: { type: 'timestamp' },
-        partner: { type: 'string' },
+        partner: { type: 'uuid' },
         status: {
           type: 'partner_status',
           enum: ['single', 'pending', 'taken'],
