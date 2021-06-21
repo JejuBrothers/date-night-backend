@@ -45,6 +45,17 @@ export class UsersRepository {
     });
   }
 
+  //async await necessary here
+  async handlePartnerRequest(requester: UserModel): Promise<UserModel> {
+    const message = `UsersRepository.handlePartnerRequest() requester=${JSON.stringify(
+      requester,
+    )}`;
+    this.logger.log(message);
+    return await UserModel.query().patchAndFetchById(requester.id, {
+      requestedAt: new Date(),
+    });
+  }
+
   updatePartner(
     id: string,
     updatePartnerDto: UpdatePartnerDto,

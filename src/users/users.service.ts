@@ -76,6 +76,8 @@ export class UsersService {
     const message = `usersService.addPartner() requestUser=${requestUser.username} targetUser=${targetUser.username}`;
     this.logger.log(message);
 
+    this.usersRepository.handlePartnerRequest(requestUser);
+
     const payload = {
       requester: requestUser.id,
       requestee: targetUser.id,

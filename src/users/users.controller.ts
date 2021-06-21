@@ -90,7 +90,7 @@ export class UsersController {
     @Request() req,
     @Query('target') target: string,
   ): Promise<any> {
-    const message = `partnerController.sendPartnerRequest() req.user=${JSON.stringify(
+    const message = `usersController.sendPartnerRequest() req.user=${JSON.stringify(
       req.user,
     )}`;
     this.logger.log(message);
