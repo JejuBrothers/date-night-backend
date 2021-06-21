@@ -12,7 +12,6 @@ export async function seed(knex: Knex): Promise<void> {
       role: 'admin',
       id: '9bdac0a0-a682-43bc-865a-32b983f94f0a',
       partner: null,
-      status: 'single',
       requestedAt: null,
     },
     {
@@ -22,7 +21,6 @@ export async function seed(knex: Knex): Promise<void> {
       role: 'user',
       id: 'e259b4f7-00c8-4ce2-8dd0-c54e26b97dd5',
       partner: null,
-      status: 'single',
       requestedAt: null,
     },
     {
@@ -32,8 +30,6 @@ export async function seed(knex: Knex): Promise<void> {
       role: 'user',
       id: 'e7bee3e9-a5d2-4378-860e-3e7a85803e11',
       partner: null,
-      status: 'single',
-      requestedAt: null,
     },
     {
       username: 'user3',
@@ -42,8 +38,6 @@ export async function seed(knex: Knex): Promise<void> {
       role: 'user',
       id: 'fffd3b1e-bef8-404e-a15d-2586f79da920',
       partner: null,
-      status: 'single',
-      requestedAt: null,
     },
   ]);
 }

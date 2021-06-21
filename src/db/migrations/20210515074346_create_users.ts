@@ -20,10 +20,6 @@ export async function up(knex: Knex): Promise<void> {
           table.timestamps(true, true);
           table.timestamp('requested_at').nullable();
           table.uuid('partner').nullable();
-          table.enu('status', ['single', 'pending', 'taken'], {
-            useNative: true,
-            enumName: 'partner_status',
-          });
         });
     }
   });

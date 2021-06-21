@@ -1,6 +1,5 @@
 import { Model } from 'objection';
 import { UserRoleEnum } from '../enum/user-role.enum';
-import { PartnerStatusEnum } from '../enum/partner-status.enum';
 
 export class UserModel extends Model {
   id: string;
@@ -11,7 +10,6 @@ export class UserModel extends Model {
   createdAt: Date;
   updatedAt: Date;
   partner: string;
-  status: PartnerStatusEnum;
   requestedAt: Date;
 
   static get tableName() {
@@ -39,11 +37,6 @@ export class UserModel extends Model {
         createdAt: { type: 'timestamp' },
         updatedAt: { type: 'timestamp' },
         partner: { type: 'uuid' },
-        status: {
-          type: 'partner_status',
-          enum: ['single', 'pending', 'taken'],
-          default: 'single',
-        },
         requestedAt: { type: 'timestamp' },
       },
     };

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePartnerDto } from './dto/update-partner.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -44,19 +45,18 @@ export class UsersRepository {
     });
   }
 
-  updateByUsername(
-    username: string,
-    updateUserDto: UpdateUserDto,
+  updatePartner(
+    id: string,
+    updatePartnerDto: UpdatePartnerDto,
   ): Promise<UserModel> {
-    const message = `UsersRepository.updateByUsername() username=${username} updateUserDto=${JSON.stringify(
-      updateUserDto,
+    const message = `UsersRepository.updatePartner() id=${id} updatePartnerDto=${JSON.stringify(
+      updatePartnerDto,
     )}`;
     this.logger.log(message);
-    return UserModel.query()
-      .patch({ ...updateUserDto, updatedAt: new Date() })
-      .where('username', username)
-      .returning('*')
-      .first();
+    return UserModel.query().patchAndFetchById(id, {
+      ...updatePartnerDto,
+      updatedAt: new Date(),
+    });
   }
 
   delete(id: string): Promise<number> {

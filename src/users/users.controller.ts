@@ -62,10 +62,10 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Put('id/:id')
+  @Put(':id')
   @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
   update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Query('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserModel> {
     const message = `UsersController.update() id=${id} updateUserDto=${JSON.stringify(
@@ -73,19 +73,6 @@ export class UsersController {
     )}`;
     this.logger.log(message);
     return this.usersService.update(id, updateUserDto);
-  }
-
-  @Put('username/:username')
-  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
-  updateByUsername(
-    @Param('username') username: string,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UserModel> {
-    const message = `UsersController.updateByUsername() username=${username} updateUserDto=${JSON.stringify(
-      updateUserDto,
-    )}`;
-    this.logger.log(message);
-    return this.usersService.updateByUsername(username, updateUserDto);
   }
 
   @Delete(':id')
@@ -99,32 +86,31 @@ export class UsersController {
   //partner endpoints
   @Post('/partner/add')
   @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
-  async sendPartnerRequest(@Request() req, @Query('target') target: string) {
+  sendPartnerRequest(
+    @Request() req,
+    @Query('target') target: string,
+  ): Promise<any> {
     const message = `partnerController.sendPartnerRequest() req.user=${JSON.stringify(
       req.user,
     )}`;
     this.logger.log(message);
-    return await this.usersService.addPartner(req.user.username, target);
+    return this.usersService.addPartner(req.user.username, target);
   }
 
-  @Get('response')
+  @Get('partner/response')
   @Public()
-  async acceptRequest(
+  acceptRequest(
     @Query('token') token: string,
     @Query('decision') decision: boolean,
-  ) {
-    this.logger.log(`partnerController.accept() token=${token}`);
+  ): Promise<boolean> {
+    this.logger.log(`usersController.acceptRequest() token=${token}`);
 
-    try {
-      const valid = await this.jwtService.verify(token);
-      this.logger.log(`valid partner token: ${JSON.stringify(valid)}`);
-      this.usersService.updatePartners(
-        valid.requester,
-        valid.requestee,
-        decision,
-      );
-    } catch (error) {
-      this.logger.error(`error verifying token: ${error}`);
-    }
+    const valid = this.jwtService.verify(token);
+    this.logger.log(`valid partner token: ${JSON.stringify(valid)}`);
+    return this.usersService.updatePartners(
+      valid.requester,
+      valid.requestee,
+      decision,
+    );
   }
 }

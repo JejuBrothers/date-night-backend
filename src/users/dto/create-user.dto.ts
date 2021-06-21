@@ -1,8 +1,6 @@
-import { PartnerStatusEnum } from '../enum/partner-status.enum';
 import {
   IsDefined,
   IsEmail,
-  IsEnum,
   IsString,
   MaxLength,
   MinLength,
@@ -24,13 +22,4 @@ export class CreateUserDto {
   @MinLength(4, { message: 'Password is too short' })
   @MaxLength(72, { message: 'Password is too long' })
   password: string;
-
-  @IsString()
-  partner: string;
-
-  @IsString()
-  @IsDefined()
-  status: PartnerStatusEnum;
-
-  requestedAt: Date;
 }
