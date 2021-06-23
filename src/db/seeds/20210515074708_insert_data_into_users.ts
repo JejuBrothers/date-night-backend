@@ -30,6 +30,7 @@ export async function seed(knex: Knex): Promise<void> {
       role: 'user',
       id: 'e7bee3e9-a5d2-4378-860e-3e7a85803e11',
       partner: null,
+      requestedAt: null,
     },
     {
       username: 'user3',
@@ -38,6 +39,7 @@ export async function seed(knex: Knex): Promise<void> {
       role: 'user',
       id: 'fffd3b1e-bef8-404e-a15d-2586f79da920',
       partner: null,
+      requestedAt: null,
     },
   ]);
 }

@@ -92,15 +92,11 @@ export class UsersService {
     requestee: string,
     decision: boolean,
   ): Promise<boolean> {
-    const message = `partnerService.updatePartners() requestor=${requester} requestee=${requestee} decision=${decision}`;
+    const message = `usersService.updatePartners() requestor=${requester} requestee=${requestee} decision=${decision}`;
     this.logger.log(message);
     if (decision) {
-      await this.usersRepository.updatePartner(requester, {
-        partner: requestee,
-      });
-      await this.usersRepository.updatePartner(requestee, {
-        partner: requestee,
-      });
+      await this.usersRepository.updatePartner(requester, requestee);
+      await this.usersRepository.updatePartner(requestee, requester);
       return true;
     }
     return false;

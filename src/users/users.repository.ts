@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UpdatePartnerDto } from './dto/update-partner.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -56,16 +55,11 @@ export class UsersRepository {
     });
   }
 
-  updatePartner(
-    id: string,
-    updatePartnerDto: UpdatePartnerDto,
-  ): Promise<UserModel> {
-    const message = `UsersRepository.updatePartner() id=${id} updatePartnerDto=${JSON.stringify(
-      updatePartnerDto,
-    )}`;
+  updatePartner(requesterId: string, requesteeId: string): Promise<UserModel> {
+    const message = `UsersRepository.updatePartner() requester=${requesterId} requestee=${requesteeId}`;
     this.logger.log(message);
-    return UserModel.query().patchAndFetchById(id, {
-      ...updatePartnerDto,
+    return UserModel.query().patchAndFetchById(requesterId, {
+      partner: requesteeId,
       updatedAt: new Date(),
     });
   }
