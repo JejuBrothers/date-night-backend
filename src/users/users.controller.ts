@@ -62,7 +62,7 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Put(':id')
+  @Put()
   @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
   update(
     @Query('id', ParseUUIDPipe) id: string,

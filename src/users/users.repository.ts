@@ -45,13 +45,16 @@ export class UsersRepository {
   }
 
   //async await necessary here
-  async handlePartnerRequest(requester: UserModel): Promise<UserModel> {
-    const message = `UsersRepository.handlePartnerRequest() requester=${JSON.stringify(
-      requester,
+  async updateRequestedAt(
+    requesterId: string,
+    option?: string,
+  ): Promise<UserModel> {
+    const message = `UsersRepository.updateRequestedAt() requester=${JSON.stringify(
+      requesterId,
     )}`;
     this.logger.log(message);
-    return await UserModel.query().patchAndFetchById(requester.id, {
-      requestedAt: new Date(),
+    return await UserModel.query().patchAndFetchById(requesterId, {
+      requestedAt: option === 'new' ? new Date() : null,
     });
   }
 
@@ -61,6 +64,7 @@ export class UsersRepository {
     return UserModel.query().patchAndFetchById(requesterId, {
       partner: requesteeId,
       updatedAt: new Date(),
+      requestedAt: null,
     });
   }
 

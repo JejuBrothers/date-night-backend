@@ -76,7 +76,8 @@ export class UsersService {
     const message = `usersService.addPartner() requestUser=${requestUser.username} targetUser=${targetUser.username}`;
     this.logger.log(message);
 
-    this.usersRepository.handlePartnerRequest(requestUser);
+    this.usersRepository.updateRequestedAt(requestUser.id, 'new');
+    this.usersRepository.updateRequestedAt(targetUser.id, 'new');
 
     const payload = {
       requester: requestUser.id,
@@ -99,6 +100,8 @@ export class UsersService {
       await this.usersRepository.updatePartner(requestee, requester);
       return true;
     }
+    await this.usersRepository.updateRequestedAt(requester);
+    await this.usersRepository.updateRequestedAt(requestee);
     return false;
   }
 }
