@@ -18,6 +18,8 @@ export async function up(knex: Knex): Promise<void> {
             .defaultTo('user')
             .notNullable();
           table.timestamps(true, true);
+          table.timestamp('requested_at').nullable();
+          table.uuid('partner').nullable();
         });
     }
   });

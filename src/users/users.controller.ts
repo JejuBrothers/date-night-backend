@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Request,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserModel } from './models/user.model';
@@ -17,12 +18,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { UserRoleEnum } from './enum/user-role.enum';
 import { Public } from 'src/auth/auth.decorator';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly logger: Logger,
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   @Post()
@@ -59,10 +62,10 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Put(':id')
+  @Put()
   @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
   update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Query('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserModel> {
     const message = `UsersController.update() id=${id} updateUserDto=${JSON.stringify(
@@ -78,5 +81,36 @@ export class UsersController {
     const message = `UsersController.delete() id=${id}`;
     this.logger.log(message);
     return this.usersService.delete(id);
+  }
+
+  //partner endpoints
+  @Post('/partner/add')
+  @Roles([UserRoleEnum.ADMIN, UserRoleEnum.USER])
+  sendPartnerRequest(
+    @Request() req,
+    @Query('target') target: string,
+  ): Promise<any> {
+    const message = `usersController.sendPartnerRequest() req.user=${JSON.stringify(
+      req.user,
+    )}`;
+    this.logger.log(message);
+    return this.usersService.addPartner(req.user.username, target);
+  }
+
+  @Get('partner/response')
+  @Public()
+  acceptRequest(
+    @Query('token') token: string,
+    @Query('decision') decision: boolean,
+  ): Promise<boolean> {
+    this.logger.log(`usersController.acceptRequest() token=${token}`);
+
+    const valid = this.jwtService.verify(token);
+    this.logger.log(`valid partner token: ${JSON.stringify(valid)}`);
+    return this.usersService.updatePartners(
+      valid.requester,
+      valid.requestee,
+      decision,
+    );
   }
 }

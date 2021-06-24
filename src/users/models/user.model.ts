@@ -9,6 +9,8 @@ export class UserModel extends Model {
   role: UserRoleEnum;
   createdAt: Date;
   updatedAt: Date;
+  partner: string;
+  requestedAt: Date;
 
   static get tableName() {
     return 'users';
@@ -34,6 +36,8 @@ export class UserModel extends Model {
         },
         createdAt: { type: 'timestamp' },
         updatedAt: { type: 'timestamp' },
+        partner: { type: 'uuid' },
+        requestedAt: { type: 'timestamp' },
       },
     };
   }

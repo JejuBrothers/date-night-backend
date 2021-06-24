@@ -4,12 +4,14 @@ import { UserModel } from './models/user.model';
 import { UsersRepository } from './users.repository';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly logger: Logger,
     private readonly usersRepository: UsersRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
   async hashPassword(plainPass: string): Promise<string> {
@@ -62,5 +64,44 @@ export class UsersService {
     const message = `UsersService.delete() id=${id}`;
     this.logger.log(message);
     return this.usersRepository.delete(id);
+  }
+
+  //partner
+  async addPartner(requester: string, requestee: string): Promise<any> {
+    const token = {
+      partner_token: null,
+    };
+    const requestUser = await this.findByUsername(requester);
+    const targetUser = await this.findByUsername(requestee);
+    const message = `usersService.addPartner() requestUser=${requestUser.username} targetUser=${targetUser.username}`;
+    this.logger.log(message);
+
+    this.usersRepository.updateRequestedAt(requestUser.id, 'new');
+    this.usersRepository.updateRequestedAt(targetUser.id, 'new');
+
+    const payload = {
+      requester: requestUser.id,
+      requestee: targetUser.id,
+    };
+    token.partner_token = this.jwtService.sign(payload);
+
+    return token;
+  }
+
+  async updatePartners(
+    requester: string,
+    requestee: string,
+    decision: boolean,
+  ): Promise<boolean> {
+    const message = `usersService.updatePartners() requestor=${requester} requestee=${requestee} decision=${decision}`;
+    this.logger.log(message);
+    if (decision) {
+      await this.usersRepository.updatePartner(requester, requestee);
+      await this.usersRepository.updatePartner(requestee, requester);
+      return true;
+    }
+    await this.usersRepository.updateRequestedAt(requester);
+    await this.usersRepository.updateRequestedAt(requestee);
+    return false;
   }
 }

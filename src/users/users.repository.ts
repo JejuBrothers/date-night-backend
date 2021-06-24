@@ -44,6 +44,30 @@ export class UsersRepository {
     });
   }
 
+  //async await necessary here
+  async updateRequestedAt(
+    requesterId: string,
+    option?: string,
+  ): Promise<UserModel> {
+    const message = `UsersRepository.updateRequestedAt() requester=${JSON.stringify(
+      requesterId,
+    )}`;
+    this.logger.log(message);
+    return await UserModel.query().patchAndFetchById(requesterId, {
+      requestedAt: option === 'new' ? new Date() : null,
+    });
+  }
+
+  updatePartner(requesterId: string, requesteeId: string): Promise<UserModel> {
+    const message = `UsersRepository.updatePartner() requester=${requesterId} requestee=${requesteeId}`;
+    this.logger.log(message);
+    return UserModel.query().patchAndFetchById(requesterId, {
+      partner: requesteeId,
+      updatedAt: new Date(),
+      requestedAt: null,
+    });
+  }
+
   delete(id: string): Promise<number> {
     const message = `UsersRepository.delete() id=${id}`;
     this.logger.log(message);
