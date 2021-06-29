@@ -31,8 +31,8 @@ export class UserModel extends Model {
         password: { type: 'string', minLength: 4, maxLength: 72 },
         role: {
           type: 'user_role',
-          enum: ['user', 'admin'],
-          default: 'user',
+          enum: ['user', 'admin', 'guest'],
+          default: 'guest',
         },
         createdAt: { type: 'timestamp' },
         updatedAt: { type: 'timestamp' },
@@ -45,7 +45,7 @@ export class UserModel extends Model {
   $formatJson(jsonRaw) {
     const json = super.$formatJson(jsonRaw);
     delete json.password;
-    delete json.role;
+    // delete json.role;
 
     return json;
   }

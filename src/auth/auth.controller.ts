@@ -1,4 +1,6 @@
 import {
+  Get,
+  Query,
   Body,
   Controller,
   Logger,
@@ -27,6 +29,14 @@ export class AuthController {
     )}`;
     this.logger.log(message);
     return this.authService.signup(createUserDto);
+  }
+
+  @Get('confirm')
+  @Public()
+  confirm(@Query('token') token: string): Promise<UserModel> {
+    const message = `AuthController.confirm() token=${token}`;
+    this.logger.log(message);
+    return this.authService.confirm(token);
   }
 
   @Post('login')
