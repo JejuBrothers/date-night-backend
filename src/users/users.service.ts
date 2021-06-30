@@ -5,6 +5,7 @@ import { UsersRepository } from './users.repository';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserRoleEnum } from './enum/user-role.enum';
 
 @Injectable()
 export class UsersService {
@@ -103,5 +104,11 @@ export class UsersService {
     await this.usersRepository.updateRequestedAt(requester);
     await this.usersRepository.updateRequestedAt(requestee);
     return false;
+  }
+
+  updateRole(id: string, role: UserRoleEnum): Promise<UserModel> {
+    const message = `UsersService.updateRole() id=${id} role=${role}`;
+    this.logger.log(message);
+    return this.usersRepository.updateRole(id, role);
   }
 }

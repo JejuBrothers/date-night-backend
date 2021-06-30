@@ -7,9 +7,11 @@ import { LocalStrategy } from './guards/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './guards/constants';
 import { JwtStrategy } from './guards/jwt.strategy';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
+    MailModule,
     UsersModule,
     PassportModule,
     JwtModule.register({
